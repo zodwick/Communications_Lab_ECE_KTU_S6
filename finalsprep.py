@@ -205,8 +205,72 @@ def qpskber():
     plt.show()
 
 
+def pcm():
+    # analog
+
+    fig, axs = plt.subplots(4, 1)
+    t = np.arange(0, 0.1, 0.0001)
+    msg_f = 100
+    dc = 2
+    sig = np.sin(2*np.pi * t * msg_f)+dc
+    axs[0].plot(t, sig)
+    axs[0].set_title("signal")
+
+    # Sampling
+    fs = 8 * msg_f
+    ts = np.arange(0, 0.1, 1/fs)
+    sampled_s = dc + np.sin(2*np.pi * msg_f * ts)
+    axs[1].plot(ts, sampled_s)
+    axs[1].set_title("signal")
+
+    # Quantising
+
+    L = 16
+    sig_min = np.min(sig)
+    sig_max = np.max(sig)
+    q_levels = np.linspace(sig_min, sig_max, L)  # indexes with length of msg
+    q_sig = np.digitize(sampled_s, q_levels, right='true')
+    q_sig = q_levels[q_sig]  # each index is replaced with the value
+
+    axs[2].plot(ts, q_sig, "b", ts, q_sig, "m*")
+    axs[2].set_title("Quantized Signal")
+
+    def power(s):
+        return np.mean(np.square(s))
+
+    q_noise = q_sig - sampled_s
+    axs[3].plot(ts, q_noise)
+    axs[3].set_title("Quantization Noise")
+    # plt.hist(q_noise)
+    plt.show()
+
+    p_signal = power(sig)
+    p_noise = power(q_noise)
+    snr = p_signal / p_noise
+    snr_db = 20 * np.log10(snr)
+    print("Signal-to-Noise ratio in dB:", snr_db)
+
+    snr_db_list = []
+
+    for R in range(1, 11):
+        snr_db = 6.02 * R + 1.76
+        snr_db_list.append(snr_db)
+
+    plt.plot(range(1, 11), snr_db_list, "r*-")
+    plt.xlabel("Number of Bits per Symbol")
+    plt.ylabel("SNR in dB")
+    plt.title("SNR vs Number of Bits per Symbol")
+    plt.show()
+
+
+def matched_filter():
+    print("Matched Filter")
+
+
 if __name__ == '__main__':
     # bpsk()
     # bersim()
     # qpsk()
-    qpskber()
+    # qpskber()
+    # pcm()
+    matched_filter()
