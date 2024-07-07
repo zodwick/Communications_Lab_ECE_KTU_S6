@@ -70,37 +70,37 @@ eye_diagram_noisy = create_eye_diagram(x_noisy, sps)
 plt.figure(figsize=(15, 12))
 
 # Plot original pulse
-plt.subplot(3, 3, 1)
+plt.subplot(4,2, 1)
 plt.plot(x[:8*sps], '.-')
 plt.title('Original Pulse (first 8 symbols)')
 plt.grid(True)
 
 # Plot raised-cosine filter
-plt.subplot(3, 3, 2)
+plt.subplot(4,2, 2)
 plt.plot(t, h, '.')
 plt.title('Raised-Cosine Filter')
 plt.grid(True)
 
 # Plot convolved signal
-plt.subplot(3, 3, 3)
+plt.subplot(4,2, 3)
 plt.plot(x_shaped[:8*sps], '.-')
 plt.title('Convolved Signal (first 8 symbols)')
 plt.grid(True)
 
 # Plot signal with added noise
-plt.subplot(3, 3, 4)
+plt.subplot(4,2, 4)
 plt.plot(x_noisy[:8*sps], '.-')
 plt.title('Signal with AWGN (first 8 symbols)')
 plt.grid(True)
 
 # Plot sampled signal
-plt.subplot(3, 3, 5)
+plt.subplot(4,2, 5)
 plt.plot(sampled_indices[:8], x_sampled[:8], '.-')
 plt.title('Sampled Signal (first 8 symbols)')
 plt.grid(True)
 
 # Plot decisions
-plt.subplot(3, 3, 6)
+plt.subplot(4,2, 6)
 plt.step(sampled_indices[:8], decisions[:8],
          'g', where='mid', label='Decisions')
 plt.title('Decisions (first 8 symbols)')
@@ -109,7 +109,7 @@ plt.ylabel('Amplitude/Decision')
 plt.grid(True)
 
 # Plot eye diagram
-plt.subplot(3, 3, 7)
+plt.subplot(4,2, 7)
 plt.plot(eye_diagram)
 plt.title('Eye Diagram')
 plt.xlabel('Time')
@@ -117,7 +117,7 @@ plt.ylabel('Amplitude')
 plt.grid(True)
 
 # Plot noisy eye diagram
-plt.subplot(3, 3, 8)
+plt.subplot(4,2, 8)
 plt.plot(eye_diagram_noisy)
 plt.title('Noisy Eye Diagram')
 plt.xlabel('Time')
