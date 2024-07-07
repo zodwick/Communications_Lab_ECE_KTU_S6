@@ -124,35 +124,89 @@ def qpsk():
 
 
 def bersim():
-    N = 5000
-    EbN0_list = np.arange(0, 50)
+    N = 50000
+    EbNo_list = np.arange(0, 20, 1)
     BER = []
-    for EbN0 in EbN0_list:
-        EbN0 = 10**(EbN0/10)
-        x = 2 * (np.random.randn(N) >= 0.5) - 1
-        noise = 1 / np.sqrt(2*EbN0)
-        chanel = x + np.random.randn(N)*noise
-        received = 2 * (chanel >= 0.5) - 1
-        error = (x != received).sum()
+
+    for EbNoDB in EbNo_list:
+        Ebn0 = 10 ** (EbNoDB/10)
+        msg = 2 * (np.random.rand(N) >= 0.5) - 1
+
+        noise_std_dev = 1 / np.sqrt(2 * Ebn0)
+        channel = msg + np.random.randn(len(msg))*noise_std_dev
+
+       # print(min(channel), max(channel))
+        received = 2 * (channel >= 0) - 1
+        error = (msg != received).sum()
         BER.append(error/N)
 
-    plt.plot(EbN0_list, BER, "-", EbN0_list, BER, "go")
-    plt.axis([0, 14, 1e-7, 0.1])
-    plt.xscale('linear')
-    plt.yscale('log')
-    plt.grid()
-    plt.xlabel("EbN0 in dB")
-    plt.ylabel("BER")
-    plt.title("BER in BPSK")
-    plt.show()
-    plt.xscale('linear')
-    plt.yscale('log')
-    plt.axis([0, 14, 1e-7, 0.1])
+    print(BER)
+    fig, axs = plt.subplots(2, 1)
+    axs[0].plot(EbNo_list, BER, '-', EbNo_list, BER, 'go-')
+    axs[0].set_xlabel('EbN0')
+    axs[0].set_ylabel('BER')
+    axs[0].set_title(' EbN0 v/s BER for BPSK')
+    # axs[0].tight_layout()
 
+    axs[1].semilogy(EbNo_list, BER, '-', EbNo_list, BER, 'go-')
+    axs[1].set_xlabel('EbN0')
+    axs[1].set_ylabel('BER')
+    axs[1].set_title(' EbN0 v/s BER for BPSK')
+    plt.show()
+
+
+def qpskber():
+    N = 50000
+    EbNo_list = np.arange(0, 10, 1)
+    BER = []
+    c = 0
+
+    for EbNoDB in EbNo_list:
+        Ebn0 = 10 ** (EbNoDB/10)
+        x = np.random.rand(N) >= 0
+        x_str = [str(int(i)) for i in x]
+        x_str = "".join(x_str)
+        message = [x_str[2*i: 2*(i+1)] for i in range(int(len(x)/2))]
+        noise = 1/np.sqrt(2 * Ebn0)
+        channel = x + np.random.randn(N) * noise
+        received_x = channel >= 0.5
+        xReceived_str = [str(int(i)) for i in received_x]
+        xReceived_str = "".join(xReceived_str)
+        messageReceived = [xReceived_str[2*i: 2 *
+                                         (i+1)] for i in range(int(len(x)/2))]
+
+        message2 = np.array(message)
+        messageReceived = np.array(messageReceived)
+        errors = (message2 != messageReceived).sum()
+
+        # if c == 0:
+        #     c += 1
+        #     print("x: ", x)
+        #     print("message: ", len(message))
+        #     print("channel :", channel)
+        #     print(max(channel), min(channel))
+        #     print(received_x)
+        #     print("message2: ", message2)
+
+        BER.append(errors/N)
+
+    print(BER)
+    fig, axs = plt.subplots(2, 1)
+    axs[0].plot(EbNo_list, BER, '-', EbNo_list, BER, 'go-')
+    axs[0].set_xlabel('EbN0')
+    axs[0].set_ylabel('BER')
+    axs[0].set_title(' EbN0 v/s BER for BPSK')
+    # axs[0].tight_layout()
+
+    axs[1].semilogy(EbNo_list, BER, '-', EbNo_list, BER, 'go-')
+    axs[1].set_xlabel('EbN0')
+    axs[1].set_ylabel('BER')
+    axs[1].set_title(' EbN0 v/s BER for BPSK')
     plt.show()
 
 
 if __name__ == '__main__':
     # bpsk()
     # bersim()
-    qpsk()
+    # qpsk()
+    qpskber()
