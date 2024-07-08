@@ -232,11 +232,8 @@ def pcm():
     q_sig = np.digitize(sampled_s, q_levels, right='true')
     q_sig = q_levels[q_sig]  # each index is replaced with the value
 
-    axs[2].plot(ts, q_sig, "b", ts, q_sig, "m*")
+    axs[2].plot(ts, q_sig, "b", ts, q_sig, "*")
     axs[2].set_title("Quantized Signal")
-
-    def power(s):
-        return np.mean(np.square(s))
 
     q_noise = q_sig - sampled_s
     axs[3].plot(ts, q_noise)
@@ -244,6 +241,8 @@ def pcm():
     # plt.hist(q_noise)
     plt.show()
 
+    def power(s):
+        return np.mean(np.square(s))
     p_signal = power(sig)
     p_noise = power(q_noise)
     snr = p_signal / p_noise
@@ -252,11 +251,13 @@ def pcm():
 
     snr_db_list = []
 
-    for R in range(1, 11):
+    for R in range(1, 20):
         snr_db = 6.02 * R + 1.76
         snr_db_list.append(snr_db)
+        if R == 16:
+            print("SNR for 16 levels:", snr_db)
 
-    plt.plot(range(1, 11), snr_db_list, "r*-")
+    plt.plot(range(1, 20), snr_db_list, "r*-")
     plt.xlabel("Number of Bits per Symbol")
     plt.ylabel("SNR in dB")
     plt.title("SNR vs Number of Bits per Symbol")
