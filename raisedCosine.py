@@ -32,7 +32,9 @@ x_shaped_trimmed = x_shaped[start_index:end_index]
 # Add Gaussian noise
 power_signal = np.mean(np.abs(x_shaped_trimmed) ** 2)
 power_noise = power_signal / (10 ** (SNR_dB / 10))
-noise = np.random.normal(0, np.sqrt(power_noise), len(x_shaped_trimmed))
+# print(len(x_shaped_trimmed))
+# noise = np.random.normal(0, np.sqrt(power_noise), len(x_shaped_trimmed))
+noise = np.random.randn(len(x_shaped_trimmed)) * np.sqrt(power_noise)
 x_noisy = x_shaped_trimmed + noise
 
 # Sample the signal
@@ -56,12 +58,18 @@ def create_eye_diagram(signal, sps):
     eye_length = 2 * sps
     n_samples = len(signal)
     n_traces = n_samples // eye_length
-
+    # print(n_samples, "n_samples")
+    print(n_traces, "n_traces")
+    print(eye_length, "eye_length")
+    # eye_diagram = np.zeros((eye_length, n_traces))
     eye_diagram = np.zeros((eye_length, n_traces))
+    print(eye_diagram)
+    # print(eye_diagram.shape)
 
     for i in range(n_traces):
         start = i * eye_length
         end = start + eye_length
+        # print(start, end)
         eye_diagram[:, i] = signal[start:end]
 
     return eye_diagram
